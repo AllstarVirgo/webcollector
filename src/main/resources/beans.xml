@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+        <property name="url" value="jdbc:mysql://localhost:3306/testdb"></property>
+        <property name="username" value="potato"></property>
+        <property name="password" value="4189"></property>
+    </bean>
+
+
+    <bean id="huangRiverDao" class="com.potato.demo.dao.impl.HuangRiverDaoImpl">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="songliaoRiverDao" class="com.potato.demo.dao.impl.SongliaoRiverDaoImpl">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="songliaoReserviorDao" class="com.potato.demo.dao.impl.SongliaoReservoirDaoImpl">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="huangRiver" class="com.potato.demo.domain.HuangRiver">
+    </bean>
+
+    <bean id="songliaoRiver" class="com.potato.demo.domain.SongliaoRiver"/>
+
+    <bean id="songliaoReservior" class="com.potato.demo.domain.SongliaoReservoir"/>
+
+    <bean id="riverCrawler" class=" com.potato.demo.utils.RiverCrawler">
+        <constructor-arg type="java.lang.String">
+            <value>crawl</value>
+        </constructor-arg>
+        <constructor-arg>
+            <value>false</value>
+        </constructor-arg>
+        <constructor-arg name="huangRiver">
+            <ref bean="huangRiver"></ref>
+        </constructor-arg>
+        <constructor-arg name="songliaoRiver">
+            <ref bean="songliaoRiver"/>
+        </constructor-arg>
+        <constructor-arg name="huangRiverDao">
+            <ref bean="huangRiverDao"/>
+        </constructor-arg>
+        <constructor-arg name="songliaoRiverDao">
+            <ref bean="songliaoRiverDao"/>
+        </constructor-arg>
+        <constructor-arg name="songliaoReserviorDao">
+            <ref bean="songliaoReserviorDao"/>
+        </constructor-arg>
+        <constructor-arg name="songliaoReservoir">
+            <ref bean="songliaoReservior"/>
+        </constructor-arg>
+    </bean>
+
+</beans>

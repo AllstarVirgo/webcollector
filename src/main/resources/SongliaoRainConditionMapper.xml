@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.potato.demo.dao.SongliaoRainConditionDao">
+    <insert id="insert" parameterType="com.potato.demo.domain.SongliaoRainCondition" useGeneratedKeys="true">
+        INSERT INTO songliao_rain_condition (DRAINAGE_AREA,RIVER_NAME,STATION_NAME,RELEASE_DATE,DAY_RAINFALL,WEATHER) VALUES (#{drainageArea},#{riverName},#{stationName},#{releaseDate},#{dayRainfall},#{weather})
+    </insert>
+</mapper>
