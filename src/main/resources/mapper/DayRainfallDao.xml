@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.potato.demo.dao.DayRainfallDao">
+    <insert id="insertList" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=";">
+            INSERT INTO day_rainfall (LOCAL_NAME,START_TIME,END_TIME,SUM_RAINFALL) VALUES
+            (#{item.localName},#{item.startTime},#{item.endTime},#{item.sumRainfall})
+        </foreach>
+    </insert>
+</mapper>
