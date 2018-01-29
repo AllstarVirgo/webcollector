@@ -1,6 +1,12 @@
 package com.potato.demo.domain;
 
+import cn.edu.hfut.dmic.webcollector.model.Page;
+import com.potato.demo.utils.DateConvert;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 public class SongliaoRainCondition {
     private String drainageArea;
@@ -14,6 +20,18 @@ public class SongliaoRainCondition {
     private double dayRainfall;
 
     private String weather;
+
+    public SongliaoRainCondition() {
+    }
+
+    public SongliaoRainCondition(String drainageArea, String riverName, String stationName, Timestamp releaseDate, double dayRainfall, String weather) {
+        this.drainageArea = drainageArea;
+        this.riverName = riverName;
+        this.stationName = stationName;
+        this.releaseDate = releaseDate;
+        this.dayRainfall = dayRainfall;
+        this.weather = weather;
+    }
 
     public String getDrainageArea() {
         return drainageArea;
@@ -73,5 +91,30 @@ public class SongliaoRainCondition {
                 ", dayRainfall=" + dayRainfall +
                 ", weather='" + weather + '\'' +
                 '}';
+    }
+
+    public ArrayList<SongliaoRainCondition> analysisPage(Page page){
+        ArrayList<SongliaoRainCondition> list=new ArrayList<SongliaoRainCondition>();
+
+        Elements contents=page.select("tr");
+
+        int n=contents.size();
+        for (int i = 11; i <n ; i++) {
+            Element e=contents.get(i);
+            String[] records=e.text().split(" ");
+            Timestamp sqlTime= DateConvert.convertStrtoDate(records[3]+" "+records[4]);
+
+            //解析日雨量
+            double dayRainfall;
+            String dayRainfallStr=records[5];
+            if (dayRainfallStr.startsWith(".")){
+                dayRainfallStr="0"+dayRainfallStr;
+                dayRainfall=Double.parseDouble(dayRainfallStr);
+            }else dayRainfall=Double.parseDouble(dayRainfallStr);
+
+            list.add(new SongliaoRainCondition(records[0],records[1],records[2],sqlTime,dayRainfall,records[6]));
+        }
+
+        return list;
     }
 }

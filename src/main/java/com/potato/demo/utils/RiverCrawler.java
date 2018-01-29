@@ -4,12 +4,8 @@ import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.plugin.berkeley.BreadthCrawler;
-import com.potato.demo.dao.HuangRiverDao;
-import com.potato.demo.dao.SongliaoReserviorDao;
-import com.potato.demo.dao.SongliaoRiverDao;
-import com.potato.demo.domain.HuangRiver;
-import com.potato.demo.domain.SongliaoReservoir;
-import com.potato.demo.domain.SongliaoRiver;
+import com.potato.demo.dao.*;
+import com.potato.demo.domain.*;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -30,9 +26,15 @@ public class RiverCrawler extends BreadthCrawler {
     private SongliaoReserviorDao songliaoReserviorDao;
 
 
+    private SongliaoRainCondition songliaoRainCondition;
+
+    private DayRainfall dayRainfall;
+
+
     public RiverCrawler(String crawlPath, boolean autoParse,HuangRiver huangRiver,SongliaoRiver songliaoRiver,
                         HuangRiverDao huangRiverDao,SongliaoRiverDao songliaoRiverDao,SongliaoReserviorDao songliaoReserviorDao,
-                        SongliaoReservoir songliaoReservoir) {
+                        SongliaoReservoir songliaoReservoir,SongliaoRainCondition songliaoRainCondition,
+                        DayRainfall dayRainfall) {
         super(crawlPath, autoParse);
         this.huangRiver=huangRiver;
         this.songliaoRiver=songliaoRiver;
@@ -40,12 +42,18 @@ public class RiverCrawler extends BreadthCrawler {
         this.songliaoRiverDao=songliaoRiverDao;
         this.songliaoReserviorDao=songliaoReserviorDao;
         this.songliaoReservoir=songliaoReservoir;
+        this.songliaoRainCondition=songliaoRainCondition;
+        this.dayRainfall=dayRainfall;
         //黄河委url
-        this.addSeed(new CrawlDatum("http://61.163.88.227:8006/hwsq.aspx").meta("flag", "yellowRiver"));
+//        this.addSeed(new CrawlDatum("http://61.163.88.227:8006/hwsq.aspx").meta("flag", "yellowRiver"));
         //松辽水利url
-        this.addSeed(new CrawlDatum("http://www.slwr.gov.cn/swjgzfw/jhsq.asp").meta("flag","songliaoRiver"));
+//        this.addSeed(new CrawlDatum("http://www.slwr.gov.cn/swjgzfw/jhsq.asp").meta("flag","songliaoRiver"));
         //松辽水库url
-        this.addSeed(new CrawlDatum("http://www.slwr.gov.cn/swjgzfw/sksq.asp").meta("flag","songliaoReservior"));
+//        this.addSeed(new CrawlDatum("http://www.slwr.gov.cn/swjgzfw/sksq.asp").meta("flag","songliaoReservior"));
+        //松辽雨水情
+//        this.addSeed(new CrawlDatum("http://www.slwr.gov.cn/swjgzfw/jhsqysq.asp").meta("flag","songliaoRainCondition"));
+        //松辽日累计雨量
+        this.addSeed(new CrawlDatum("http://www.slwr.gov.cn/swjgzfw/jsfp.asp").meta("flag","dayRainfall"));
     }
 
     @Override
@@ -57,6 +65,9 @@ public class RiverCrawler extends BreadthCrawler {
 
         SongliaoRiverDao songliaoRiverDao= (SongliaoRiverDao) context.getBean("songliaoRiverDao");
 
+        SongliaoRainConditionDao songliaoRainConditionDao= (SongliaoRainConditionDao) context.getBean("songliaoRainConditionDao");
+
+        DayRainfallDao dayRainfallDao= (DayRainfallDao) context.getBean("dayRainfallDao");
         String flag = page.meta("flag");
         if (flag.equals("yellowRiver")) {
             huangRiverDao.insertList(huangRiver.analysisPage(page));
@@ -68,6 +79,10 @@ public class RiverCrawler extends BreadthCrawler {
             }
         }else if(flag.equals("songliaoReservior")){
             songliaoReserviorDao.insertList(songliaoReservoir.analysisPage(page));
+        }else if(flag.equals("songliaoRainCondition")){
+            songliaoRainConditionDao.insertList(songliaoRainCondition.analysisPage(page));
+        }else if(flag.equals("dayRainfall")){
+            dayRainfallDao.insertList(dayRainfall.analysisPage(page));
         }
     }
 

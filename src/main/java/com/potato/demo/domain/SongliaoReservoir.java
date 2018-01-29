@@ -90,13 +90,13 @@ public class SongliaoReservoir {
             String[] records=elements.get(i).text().split(" ");
             Timestamp sqlDate= DateConvert.convertStrtoDate(records[2]+" "+records[3]);
             double waterLevel;
-            if(!records[4].equals("--"))waterLevel= ContentExtract.extract(records[4]);
+            if(!records[4].equals("--"))waterLevel= ContentExtract.extractDouble(records[4]);
             else waterLevel=-1;
             double waterStorageCapacity;
-            if(!records[5].equals("--"))waterStorageCapacity=ContentExtract.extract(records[5]);
+            if(!records[5].equals("--"))waterStorageCapacity=ContentExtract.extractDouble(records[5]);
             else waterStorageCapacity=-1;
             double outputStorage;
-            if(!records[6].equals("--"))outputStorage=ContentExtract.extract(records[6]);
+            if(!records[6].equals("--"))outputStorage=ContentExtract.extractDouble(records[6]);
             else outputStorage=-1;
             list.add(new SongliaoReservoir(records[0],records[1],sqlDate,waterLevel,waterStorageCapacity,outputStorage));
         }

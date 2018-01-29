@@ -16,6 +16,12 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.mybatis</groupId>
+      <artifactId>mybatis-spring</artifactId>
+      <version>1.2.2</version>
+    </dependency>
+
+    <dependency>
       <groupId>cn.edu.hfut.dmic.webcollector</groupId>
       <artifactId>WebCollector</artifactId>
       <version>2.71</version>

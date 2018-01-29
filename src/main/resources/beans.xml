@@ -1,14 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
-        <property name="url" value="jdbc:mysql://localhost:3306/testdb"></property>
-        <property name="username" value="potato"></property>
-        <property name="password" value="4189"></property>
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+    <!--加载配置文件-->
+    <context:property-placeholder location="jdbc.properties"/>
+
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
     </bean>
 
+    <!-- 配置SqlSessionFactory -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 指定mybatis的全局配置文件的路径 -->
+        <property name="configLocation" value="myBatisConf.xml"></property>
+        <!-- 数据源 -->
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="mapperLocations" value="classpath*:mapper/*.xml"/>
+    </bean>
+
+    <!--自动扫描-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.potato.demo.dao"></property>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
 
     <bean id="huangRiverDao" class="com.potato.demo.dao.impl.HuangRiverDaoImpl">
         <property name="dataSource" ref="dataSource"/>
@@ -28,6 +49,10 @@
     <bean id="songliaoRiver" class="com.potato.demo.domain.SongliaoRiver"/>
 
     <bean id="songliaoReservior" class="com.potato.demo.domain.SongliaoReservoir"/>
+
+    <bean id="songliaoRainCondition" class="com.potato.demo.domain.SongliaoRainCondition"/>
+
+    <bean id="dayRainfall" class="com.potato.demo.domain.DayRainfall"/>
 
     <bean id="riverCrawler" class=" com.potato.demo.utils.RiverCrawler">
         <constructor-arg type="java.lang.String">
@@ -53,6 +78,12 @@
         </constructor-arg>
         <constructor-arg name="songliaoReservoir">
             <ref bean="songliaoReservior"/>
+        </constructor-arg>
+        <constructor-arg name="songliaoRainCondition">
+            <ref bean="songliaoRainCondition"/>
+        </constructor-arg>
+        <constructor-arg name="dayRainfall">
+            <ref bean="dayRainfall"/>
         </constructor-arg>
     </bean>
 

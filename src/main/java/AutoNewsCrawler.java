@@ -11,7 +11,7 @@ public class AutoNewsCrawler extends BreadthCrawler {
     /**
      * @param crawlPath crawlPath is the path of the directory which maintains
      *                  information of this crawler
-     * @param autoParse if autoParse is true,BreadthCrawler will auto extract
+     * @param autoParse if autoParse is true,BreadthCrawler will auto extractDouble
      *                  links which match regex rules from pag
      */
     public AutoNewsCrawler(String crawlPath, boolean autoParse) {
@@ -38,7 +38,7 @@ public class AutoNewsCrawler extends BreadthCrawler {
         /*if page is news page*/
         if (page.matchUrl("http://news.hfut.edu.cn/show-.*html")) {
 
-            /*extract title and content of news by css selector*/
+            /*extractDouble title and content of news by css selector*/
             String title = page.select("div[id=Article]>h2").first().text();
             String content = page.selectText("div#artibody");
 

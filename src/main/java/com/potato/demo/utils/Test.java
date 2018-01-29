@@ -6,8 +6,11 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Test {
 
@@ -15,16 +18,19 @@ public class Test {
         insertTest();
     }
     public static void insertTest(){
-        //设置为自动提交
-        SqlSession sqlSession=getSessionFactory().openSession(true);
-        SongliaoRainConditionDao s=sqlSession.getMapper(SongliaoRainConditionDao.class);
+        ApplicationContext ac=new ClassPathXmlApplicationContext("beans.xml");
+        SongliaoRainConditionDao s= (SongliaoRainConditionDao) ac.getBean("songliaoRainConditionDao");
+
+        ArrayList<SongliaoRainCondition>list=new ArrayList<SongliaoRainCondition>();
         SongliaoRainCondition sRC=new SongliaoRainCondition();
         sRC.setDrainageArea("松江");
         sRC.setRiverName("黄河");
         sRC.setDayRainfall(12.3);
         sRC.setStationName("珠江口");
         sRC.setWeather("晴");
-        s.insert(sRC);
+        list.add(sRC);
+        System.out.println(list.size());
+        s.insertList(list);
     }
 
     private static SqlSessionFactory getSessionFactory(){

@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ContentExtract {
-    public static double extract(String string){
+    public static double extractDouble(String string){
         String regex="\\d+(\\.)?(\\d+)?";
         Pattern p=Pattern.compile(regex);
         Matcher m=p.matcher(string);

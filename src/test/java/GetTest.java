@@ -63,7 +63,7 @@ public class GetTest {
 
     public void analysis(){
         try {
-            Document doc= Jsoup.connect("http://www.slwr.gov.cn/swjgzfw/sksq.asp").get();
+            Document doc= Jsoup.connect("http://www.slwr.gov.cn/swjgzfw/jsfp.asp").get();
             Elements contents=doc.select("tr");
             int n=contents.size();
             for (int i = 11; i <n ; i++) {

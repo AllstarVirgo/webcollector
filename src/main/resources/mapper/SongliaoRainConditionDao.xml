@@ -6,4 +6,11 @@
     <insert id="insert" parameterType="com.potato.demo.domain.SongliaoRainCondition" useGeneratedKeys="true">
         INSERT INTO songliao_rain_condition (DRAINAGE_AREA,RIVER_NAME,STATION_NAME,RELEASE_DATE,DAY_RAINFALL,WEATHER) VALUES (#{drainageArea},#{riverName},#{stationName},#{releaseDate},#{dayRainfall},#{weather})
     </insert>
+
+    <insert id="insertList" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=";">
+            INSERT INTO songliao_rain_condition (DRAINAGE_AREA,RIVER_NAME,STATION_NAME,RELEASE_DATE,DAY_RAINFALL,WEATHER) VALUES
+            (#{item.drainageArea},#{item.riverName},#{item.stationName},#{item.releaseDate},#{item.dayRainfall},#{item.weather})
+        </foreach>
+    </insert>
 </mapper>
