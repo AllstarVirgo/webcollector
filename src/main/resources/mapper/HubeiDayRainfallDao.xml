@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.potato.demo.dao.HubeiDayRainfallDao">
+    <insert id="insert" parameterType="com.potato.demo.domain.HubeiDayRainfall" useGeneratedKeys="true">
+        INSERT INTO hubei_day_rainfall (PROVINCE_NAME,CITY_NAME,COUNTRY_NAME,RAINFALL,RAIN_DATE) VALUES (#{provinceName},#{cityName},#{countryName},#{rainfall},#{rainDate})
+    </insert>
+
+</mapper>

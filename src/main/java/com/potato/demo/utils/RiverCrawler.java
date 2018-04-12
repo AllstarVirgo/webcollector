@@ -6,10 +6,15 @@ import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.plugin.berkeley.BreadthCrawler;
 import com.potato.demo.dao.*;
 import com.potato.demo.domain.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.text.ParseException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
 public class RiverCrawler extends BreadthCrawler {
@@ -30,6 +35,10 @@ public class RiverCrawler extends BreadthCrawler {
 
     private DayRainfall dayRainfall;
 
+    private static final int INI_DELAY =24*60*60;
+
+    private static final int PERIOD =24*60*60;
+
 
     public RiverCrawler(String crawlPath, boolean autoParse,HuangRiver huangRiver,SongliaoRiver songliaoRiver,
                         HuangRiverDao huangRiverDao,SongliaoRiverDao songliaoRiverDao,SongliaoReserviorDao songliaoReserviorDao,
@@ -45,13 +54,13 @@ public class RiverCrawler extends BreadthCrawler {
         this.songliaoRainCondition=songliaoRainCondition;
         this.dayRainfall=dayRainfall;
         //黄河委url
-//        this.addSeed(new CrawlDatum("http://61.163.88.227:8006/hwsq.aspx").meta("flag", "yellowRiver"));
+        this.addSeed(new CrawlDatum("http://61.163.88.227:8006/hwsq.aspx").meta("flag", "yellowRiver"));
         //松辽水利url
-//        this.addSeed(new CrawlDatum("http://www.slwr.gov.cn/swjgzfw/jhsq.asp").meta("flag","songliaoRiver"));
+        this.addSeed(new CrawlDatum("http://www.slwr.gov.cn/swjgzfw/jhsq.asp").meta("flag","songliaoRiver"));
         //松辽水库url
-//        this.addSeed(new CrawlDatum("http://www.slwr.gov.cn/swjgzfw/sksq.asp").meta("flag","songliaoReservior"));
+        this.addSeed(new CrawlDatum("http://www.slwr.gov.cn/swjgzfw/sksq.asp").meta("flag","songliaoReservior"));
         //松辽雨水情
-//        this.addSeed(new CrawlDatum("http://www.slwr.gov.cn/swjgzfw/jhsqysq.asp").meta("flag","songliaoRainCondition"));
+        this.addSeed(new CrawlDatum("http://www.slwr.gov.cn/swjgzfw/jhsqysq.asp").meta("flag","songliaoRainCondition"));
         //松辽日累计雨量
         this.addSeed(new CrawlDatum("http://www.slwr.gov.cn/swjgzfw/jsfp.asp").meta("flag","dayRainfall"));
     }
@@ -87,13 +96,29 @@ public class RiverCrawler extends BreadthCrawler {
     }
 
     public static void main(String[] args) {
-        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+        Runnable runnable=new Runnable() {
+            @Override
+            public void run() {
+                Logger logger=LoggerFactory.getLogger(BreadthCrawler.class);
 
-        RiverCrawler yr = (RiverCrawler) context.getBean("riverCrawler");
-        try {
-            yr.start(1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+
+                logger.info("开始水利相关网站的抓取");
+
+                RiverCrawler yr = (RiverCrawler) context.getBean("riverCrawler");
+                try {
+                    yr.start(1);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                logger.info("已完成水利相关网站的抓取");
+            }
+        };
+        ScheduledExecutorService service = Executors
+                .newSingleThreadScheduledExecutor();
+        // 第二个参数为首次执行的延时时间，第三个参数为定时执行的间隔时间
+        service.scheduleAtFixedRate(runnable, INI_DELAY, PERIOD, TimeUnit.SECONDS);
+
     }
 }

@@ -5,7 +5,7 @@
 <mapper namespace="com.potato.demo.dao.DayRainfallDao">
     <insert id="insertList" parameterType="java.util.List">
         <foreach collection="list" item="item" index="index" separator=";">
-            INSERT INTO day_rainfall (LOCAL_NAME,START_TIME,END_TIME,SUM_RAINFALL) VALUES
+            INSERT INTO rainfall_day (LOCAL_NAME,START_TIME,END_TIME,SUM_RAINFALL) VALUES
             (#{item.localName},#{item.startTime},#{item.endTime},#{item.sumRainfall})
         </foreach>
     </insert>

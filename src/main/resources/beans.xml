@@ -43,6 +43,7 @@
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
+
     <bean id="huangRiver" class="com.potato.demo.domain.HuangRiver">
     </bean>
 
@@ -53,6 +54,8 @@
     <bean id="songliaoRainCondition" class="com.potato.demo.domain.SongliaoRainCondition"/>
 
     <bean id="dayRainfall" class="com.potato.demo.domain.DayRainfall"/>
+
+    <bean id="hubeiDayRainfall" class="com.potato.demo.domain.HubeiDayRainfall"/>
 
     <bean id="riverCrawler" class=" com.potato.demo.utils.RiverCrawler">
         <constructor-arg type="java.lang.String">
@@ -84,6 +87,21 @@
         </constructor-arg>
         <constructor-arg name="dayRainfall">
             <ref bean="dayRainfall"/>
+        </constructor-arg>
+    </bean>
+
+    <bean id="autoHydrologyInfoCrawler" class="com.potato.demo.utils.AutoHydrologyInfoCrawler">
+        <constructor-arg type="java.lang.String">
+            <value>crawl</value>
+        </constructor-arg>
+        <constructor-arg>
+            <value>true</value>
+        </constructor-arg>
+        <constructor-arg name="hubeiDayRainfallDao">
+            <ref bean="hubeiDayRainfallDao"/>
+        </constructor-arg>
+        <constructor-arg name="hubeiDayRainfall">
+            <ref bean="hubeiDayRainfall"/>
         </constructor-arg>
     </bean>
 

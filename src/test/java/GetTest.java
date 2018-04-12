@@ -10,6 +10,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -82,8 +83,24 @@ public class GetTest {
 
     }
 
+    public void jsoupPost(){
+        try {
+            Document doc= Jsoup.connect("http://www.bjwater.gov.cn/eportal/ui?pageId=349049&moduleId=c0c024e49b714288977cc55f88779e5c").
+                    data("time","2017-07-21").post();
+            Elements elements=doc.select("tr");
+            int n=elements.size();
+            for (int i = 2; i < n-5; i++) {
+                String[] strEles=elements.get(i).text().split(" ");
+                System.out.println(Arrays.toString(strEles));
+                System.out.println("------------------------------------------");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
         GetTest getTest=new GetTest();
-        getTest.analysis();
+        getTest.jsoupPost();
     }
 }
